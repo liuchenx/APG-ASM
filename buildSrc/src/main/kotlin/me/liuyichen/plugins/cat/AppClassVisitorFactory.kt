@@ -9,8 +9,9 @@ import org.objectweb.asm.ClassVisitor
 import org.gradle.api.Incubating
 
 
+
 @Incubating
-abstract class AppClassVisitorFactory: AsmClassVisitorFactory<InstrumentationParameters.None> {
+abstract class AppClassVisitorFactory: AsmClassVisitorFactory<AppParameters> {
 
 
     override fun createClassVisitor(classContext: ClassContext, nextClassVisitor: ClassVisitor): ClassVisitor {
@@ -18,6 +19,9 @@ abstract class AppClassVisitorFactory: AsmClassVisitorFactory<InstrumentationPar
     }
 
     override fun isInstrumentable(classData: ClassData): Boolean {
-        return true
+        if (parameters.get().appName == classData.className) {
+            return true
+        }
+        return false
     }
 }

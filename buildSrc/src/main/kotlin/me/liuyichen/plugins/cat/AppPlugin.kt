@@ -11,11 +11,19 @@ class AppPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
 
+        val catExt = project.extensions.create("cat", AppExt::class.java)
+        project.afterEvaluate {
+            println("Cat extension app name: ${catExt.app}")
+        }
         val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)
         androidComponents.onVariants { variant ->
-
-         //   variant.transformClassesWith(AppClassVisitorFactory::class.java, InstrumentationScope.PROJECT) {}
-         //   variant.setAsmFramesComputationMode(FramesComputationMode.COPY_FRAMES)
+            if (variant.name.capitalize() == "Debug") {
+                variant.transformClassesWith(AppClassVisitorFactory::class.java, InstrumentationScope.PROJECT
+                ) {
+                    it.appName = catExt.app ?: throw Exception("not found app class path")
+                }
+                variant.setAsmFramesComputationMode(FramesComputationMode.COPY_FRAMES)
+            }
         }
     }
 }

@@ -22,3 +22,4 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("com.android.tools.build:gradle:7.0.4")
 }
+
